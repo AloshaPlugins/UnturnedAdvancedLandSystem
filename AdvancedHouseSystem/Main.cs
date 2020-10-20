@@ -7,6 +7,7 @@ using AdvancedHouseSystem.Managers;
 using Rocket.API;
 using Rocket.Core.Commands;
 using Rocket.Core.Plugins;
+using Rocket.Unturned.Chat;
 using Rocket.Unturned.Extensions;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
@@ -22,6 +23,8 @@ namespace AdvancedHouseSystem
         protected override void Load()
         {
             Instance = this;
+            EffectManager.onEffectButtonClicked += ControlManager.OnButtonClicked;
+            EffectManager.onEffectTextCommitted += ControlManager.OnTyped;
             BarricadeManager.onDeployBarricadeRequested += OnDeployBarricadeRequested;
             BarricadeManager.onSalvageBarricadeRequested += OnSalvageBarricadeRequested;
             StructureManager.onDeployStructureRequested += OnDeployStructureRequested;
@@ -31,6 +34,8 @@ namespace AdvancedHouseSystem
         protected override void Unload()
         {
             Instance = null;
+            EffectManager.onEffectButtonClicked -= ControlManager.OnButtonClicked;
+            EffectManager.onEffectTextCommitted -= ControlManager.OnTyped;
             BarricadeManager.onDeployBarricadeRequested -= OnDeployBarricadeRequested;
             StructureManager.onDeployStructureRequested -= OnDeployStructureRequested;
             StructureManager.onDeployStructureRequested -= OnDeployStructureRequested;
@@ -47,18 +52,57 @@ namespace AdvancedHouseSystem
             var land = LandManager.GetPositionToLand(barricade.point);
             if (land == null)
             {
-                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && (player != null && player
-                    .ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission))) shouldallow = false;
+                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player.ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false;
+                UnturnedChat.Say("1");
                 return;
+                
             }
 
-            if (land.Author != steamıd.m_SteamID || !land.Members.Any(member => member.Id == steamıd.m_SteamID))
+            if (land.Author != steamıd.m_SteamID && !land.Members.Any(member => member.Id == steamıd.m_SteamID))
             {
+                UnturnedChat.Say("2");
                 shouldallow = false;
                 ChatManager.serverSendMessage($"<size=20><color=red>BU BÖLGEDEN YAPI KALDIRMA İZNİN YOK</color></size> Eğer bu bölgeye bir yapı kaldırmak istiyorsan bölge sahibiyle iletişime geçmen gerekiyor.", Color.white, player);
                 return;
             }
         }
+
+        // private void test()
+        // {
+        //     List<RegionCoordinate> regions = new List<RegionCoordinate>();
+        //     List<Transform> barricades = new List<Transform>();
+        //     List<Transform> structures = new List<Transform>();
+        //
+        //     Regions.getRegionsInRadius(Center, radius, regions);
+        //     BarricadeManager.getBarricadesInRadius(Center, radius, regions, barricades);
+        //     StructureManager.getStructuresInRadius(Center, radius, regions, structures);
+        //
+        //     foreach (var b in barricades)
+        //     {
+        //         if (b.transform.position.x <= max.x && b.transform.position.x >= min.x && b.transform.position.y <= max.y && b.transform.position.y >= min.y && b.transform.position.z <= max.z && b.transform.position.z >= min.z)
+        //         {
+        //             byte x;
+        //             byte y;
+        //
+        //             ushort plant;
+        //             ushort index;
+        //
+        //             BarricadeRegion r;
+        //
+        //             if (BarricadeManager.tryGetInfo(b, out x, out y, out plant, out index, out r))
+        //             {
+        //
+        //                 Transform tt = DamageTool.getBarricadeRootTransform(b);
+        //                 var bdata = r.barricades[index];
+        //                 if (Convert.ToString(bdata.owner) == player)
+        //                 {
+        //                     BarricadeManager.destroyBarricade(r, x, y, plant, index);
+        //                 }
+        //             }
+        //         }
+        //     }
+        //
+        // }
         private void OnSalvageStructureRequested(CSteamID steamıd, byte x, byte y, ushort index, ref bool shouldallow)
         {
             if (steamıd == CSteamID.Nil) return;
@@ -70,13 +114,14 @@ namespace AdvancedHouseSystem
             var land = LandManager.GetPositionToLand(barricade.point);
             if (land == null)
             {
-                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && (player != null && player
-                    .ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission))) shouldallow = false;
+                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player.ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false;
+                UnturnedChat.Say("3");
                 return;
             }
 
-            if (land.Author != steamıd.m_SteamID || !land.Members.Any(member => member.Id == steamıd.m_SteamID))
+            if (land.Author != steamıd.m_SteamID && !land.Members.Any(member => member.Id == steamıd.m_SteamID))
             {
+                UnturnedChat.Say("4");
                 shouldallow = false;
                 ChatManager.serverSendMessage($"<size=20><color=red>BU BÖLGEDEN YAPI KALDIRMA İZNİN YOK</color></size> Eğer bu bölgeye bir yapı kaldırmak istiyorsan bölge sahibiyle iletişime geçmen gerekiyor.", Color.white, player);
                 return;
@@ -90,13 +135,16 @@ namespace AdvancedHouseSystem
             var land = LandManager.GetPositionToLand(point);
             if (land == null)
             {
-                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && (player != null && player
-                    .ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission))) shouldallow = false;
+                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player.ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false;
+
+                UnturnedChat.Say("5");
                 return;
+                
             }
 
-            if (land.Author != owner || !land.Members.Any(member => member.Id == player.playerID.steamID.m_SteamID))
+            if (land.Author != owner && !land.Members.Any(member => member.Id == player.playerID.steamID.m_SteamID))
             {
+                UnturnedChat.Say("6");
                 shouldallow = false;
                 ChatManager.serverSendMessage($"<size=20><color=red>BU BÖLGEDE YAPI İZNİN YOK</color></size> Eğer bu bölgeye bir yapı yerleştirmek istiyorsan bölge sahibiyle iletişime geçmen gerekiyor.", Color.white, player);
                 return;
@@ -110,12 +158,13 @@ namespace AdvancedHouseSystem
             var land = LandManager.GetPositionToLand(point);
             if (land == null)
             {
-                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && (player != null && player
-                    .ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission))) shouldallow = false; return;
+                UnturnedChat.Say("7");
+                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player.ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false; return;
             }
 
-            if (land.Author != owner || !land.Members.Any(member => member.Id == player.playerID.steamID.m_SteamID))
+            if (land.Author != owner && !land.Members.Any(member => member.Id == player.playerID.steamID.m_SteamID))
             {
+                UnturnedChat.Say("8");
                 shouldallow = false;
                 ChatManager.serverSendMessage($"<size=20><color=red>BU BÖLGEDE YAPI İZNİN YOK</color></size> Eğer bu bölgeye bir yapı yerleştirmek istiyorsan bölge sahibiyle iletişime geçmen gerekiyor.", Color.white, player);
                 return;

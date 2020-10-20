@@ -11,8 +11,7 @@ namespace AdvancedHouseSystem
     public class Config : IRocketPluginConfiguration
     {
 
-        public ushort MainEffect;
-
+        public ushort MainEffect, InputEffect, SellStruct;
         public bool DoNotLandOutsideDeployAllItems = false;
         public string Name, LandOutsideDeployBypassPermission = "alosha.bypass";
         public List<Land> Lands = new List<Land>();
@@ -20,6 +19,8 @@ namespace AdvancedHouseSystem
         {
             Name = "Alosha Plugins";
             MainEffect = 57557;
+            InputEffect = 57558;
+            SellStruct = 57559;
             DoNotLandOutsideDeployAllItems = false;
             LandOutsideDeployBypassPermission = "alosha.bypass";
             Lands = new List<Land>();

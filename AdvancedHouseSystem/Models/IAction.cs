@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace AdvancedHouseSystem.Models
 {
-    public class Member
+    public enum IAction
     {
-        public string Name;
-        public ulong Id;
+        Sell,
+        Transfer,
+        AddPlayer,
+        RemovePlayer
     }
 }

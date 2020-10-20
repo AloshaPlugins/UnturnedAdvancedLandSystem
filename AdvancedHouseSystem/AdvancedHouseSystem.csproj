@@ -66,14 +66,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandShow.cs" />
+    <Compile Include="Commands\CommandLand.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Managers\ControlManager.cs" />
     <Compile Include="Managers\LandManager.cs" />
+    <Compile Include="Models\IAction.cs" />
     <Compile Include="Models\Land.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Helper\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
