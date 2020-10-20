@@ -105,26 +105,6 @@ namespace AdvancedHouseSystem.Managers
 
             if (buttonName == "Sat" && screen.Land.Author == id.m_SteamID)
             {
-                // List<StructureData> datas = new List<StructureData>();
-                // var i = StructureManager.regions.GetLength(0);
-                // for (int k = 0; k < i; k++)
-                // {
-                //     var j = StructureManager.regions.GetLength(k);
-                //     for (int l = 0; l < j; l++)
-                //     {
-                //         var region = StructureManager.regions[k, l];
-                //         var struces = region.structures.Where(@struct => LandManager.InLand(@struct.point, screen.Land));
-                //         datas = datas.Concat(struces).ToList();
-                //     }
-                // }
-                //
-                // if (!datas.Any(e => e.structure.id == Main.Instance.Configuration.Instance.SellStruct))
-                // {
-                //     var itemAsset =
-                //         Assets.find(EAssetType.ITEM, Main.Instance.Configuration.Instance.SellStruct) as ItemAsset;
-                //     SendError(player, $"Evi satabilmek için {itemAsset.itemName} eşyasına ihtiyacın var.", 10);
-                //     return;
-                // }
                 SendInput(player, "EV SATMA", "Evi satmak için aşağıya bir fiyat girin.", "Fiyat Girin...", "Onayla");
                 screen.Action = IAction.Sell;
                 return;
@@ -307,26 +287,6 @@ namespace AdvancedHouseSystem.Managers
 
         public static List<Member> GetPageToMembers(List<Member> list, int page, int count) =>
             list.Skip(page * count - count).Take(page * count).ToList();
-        public static string Humanize(uint number)
-        {
-            string[] suffix = { "f", "a", "p", "n", "μ", "m", string.Empty, "k", "M", "G", "T", "P", "E" };
-
-            var absnum = Math.Abs(number);
-
-            int mag;
-            if (absnum < 1)
-            {
-                mag = (int)Math.Floor(Math.Floor(Math.Log10(absnum)) / 3);
-            }
-            else
-            {
-                mag = (int)(Math.Floor(Math.Log10(absnum)) / 3);
-            }
-
-            var shortNumber = number / Math.Pow(10, mag * 3);
-
-            return $"{shortNumber:0.###}{suffix[mag + 6]}";
-        }
     }
 
     public class Screen

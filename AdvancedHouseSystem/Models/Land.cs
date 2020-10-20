@@ -12,13 +12,14 @@ namespace AdvancedHouseSystem.Models
     public class Land
     {
         public string Name;
-        public int Id;
+        public int Id, TypeId, TaxDay;
         public ulong Author;
         public List<Member> Members = new List<Member>();
 
-        public bool Sale, ForRent;
-        public uint Price, Tax, UpTax;
+        public bool Sale, TaxExpired;
+        public DateTime LastTax;
+        public uint Price, Tax;
 
-        public float X1, Z1, X2, Z2;
+        public float X1, Y1, Z1, X2, Y2, Z2;
     }
 }

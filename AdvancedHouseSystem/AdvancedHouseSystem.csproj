@@ -74,11 +74,13 @@
     <Compile Include="Managers\LandManager.cs" />
     <Compile Include="Models\IAction.cs" />
     <Compile Include="Models\Land.cs" />
+    <Compile Include="Models\LandType.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Helper\" />
+    <Compile Include="Helper\CustomMath.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

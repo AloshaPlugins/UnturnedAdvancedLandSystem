@@ -52,7 +52,9 @@ namespace AdvancedHouseSystem
             var land = LandManager.GetPositionToLand(barricade.point);
             if (land == null)
             {
-                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player.ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false;
+                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player
+                    .ToUnturnedPlayer()
+                    .HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false;
                 UnturnedChat.Say("1");
                 return;
                 
@@ -67,42 +69,6 @@ namespace AdvancedHouseSystem
             }
         }
 
-        // private void test()
-        // {
-        //     List<RegionCoordinate> regions = new List<RegionCoordinate>();
-        //     List<Transform> barricades = new List<Transform>();
-        //     List<Transform> structures = new List<Transform>();
-        //
-        //     Regions.getRegionsInRadius(Center, radius, regions);
-        //     BarricadeManager.getBarricadesInRadius(Center, radius, regions, barricades);
-        //     StructureManager.getStructuresInRadius(Center, radius, regions, structures);
-        //
-        //     foreach (var b in barricades)
-        //     {
-        //         if (b.transform.position.x <= max.x && b.transform.position.x >= min.x && b.transform.position.y <= max.y && b.transform.position.y >= min.y && b.transform.position.z <= max.z && b.transform.position.z >= min.z)
-        //         {
-        //             byte x;
-        //             byte y;
-        //
-        //             ushort plant;
-        //             ushort index;
-        //
-        //             BarricadeRegion r;
-        //
-        //             if (BarricadeManager.tryGetInfo(b, out x, out y, out plant, out index, out r))
-        //             {
-        //
-        //                 Transform tt = DamageTool.getBarricadeRootTransform(b);
-        //                 var bdata = r.barricades[index];
-        //                 if (Convert.ToString(bdata.owner) == player)
-        //                 {
-        //                     BarricadeManager.destroyBarricade(r, x, y, plant, index);
-        //                 }
-        //             }
-        //         }
-        //     }
-        //
-        // }
         private void OnSalvageStructureRequested(CSteamID steamıd, byte x, byte y, ushort index, ref bool shouldallow)
         {
             if (steamıd == CSteamID.Nil) return;
@@ -114,7 +80,9 @@ namespace AdvancedHouseSystem
             var land = LandManager.GetPositionToLand(barricade.point);
             if (land == null)
             {
-                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player.ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false;
+                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player
+                    .ToUnturnedPlayer()
+                    .HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false;
                 UnturnedChat.Say("3");
                 return;
             }
@@ -135,7 +103,9 @@ namespace AdvancedHouseSystem
             var land = LandManager.GetPositionToLand(point);
             if (land == null)
             {
-                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player.ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false;
+                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player
+                    .ToUnturnedPlayer()
+                    .HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false;
 
                 UnturnedChat.Say("5");
                 return;
@@ -159,7 +129,9 @@ namespace AdvancedHouseSystem
             if (land == null)
             {
                 UnturnedChat.Say("7");
-                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player.ToUnturnedPlayer().HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false; return;
+                if (Configuration.Instance.DoNotLandOutsideDeployAllItems && !player.isAdmin && !player
+                    .ToUnturnedPlayer()
+                    .HasPermission(Configuration.Instance.LandOutsideDeployBypassPermission)) shouldallow = false;
             }
 
             if (land.Author != owner && !land.Members.Any(member => member.Id == player.playerID.steamID.m_SteamID))
