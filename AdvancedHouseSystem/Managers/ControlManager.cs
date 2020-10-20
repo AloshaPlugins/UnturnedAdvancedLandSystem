@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AdvancedHouseSystem.Models;
+using Rocket.Unturned.Player;
 using SDG.Framework.UI.Devkit;
 using SDG.Unturned;
 using Steamworks;
+using UnityEngine;
 
 namespace AdvancedHouseSystem.Managers
 {
     public static class ControlManager
     {
-        private static string Prefix = "ADH2";
+        private static string Prefix = "ADH2_";
 
         public static List<Screen> Screens = new List<Screen>();
 
@@ -32,14 +34,80 @@ namespace AdvancedHouseSystem.Managers
         {
             if (!buttonName.StartsWith(Prefix)) return;
             buttonName = buttonName.Substring(Prefix.Length);
+            var untPlayer = UnturnedPlayer.FromPlayer(player);
+            var id = player.channel.owner.playerID.steamID;
+            var screen = Screens.FirstOrDefault(s => s.Id == id);
+            if (screen == null)
+            {
+                CloseMenu(player);
+                return;
+            }
 
+            if (buttonName == "Sayfa_Ileri")
+            {
+                var nextPage = screen.Page + 1;
+                var members = GetPageToMembers(screen.Land.Members, nextPage, 5);
+                if (members.Count <= 0) return;
+                screen.Page += 1;
+                ShowMenu(player, screen.Land);
+                return;
+            }
+            if (buttonName == "Sayfa_Geri")
+            {
+                var nextPage = screen.Page - 1;
+                if (nextPage <= 0) return;
+                var members = GetPageToMembers(screen.Land.Members, nextPage, 5);
+                if (members.Count <= 0) return;
+                screen.Page -= 1;
+                ShowMenu(player, screen.Land);
+                return;
+            }
 
+            if (buttonName == "VergiOde" && screen.Land.Author == id.m_SteamID)
+            {
+                var tax = screen.Land.Tax;
+                if (untPlayer.Experience < tax)
+                {
+                    ChatManager.serverSendMessage("<size=20><color=red>YETERSIZ BAKIYE</color></size> Vergi borcunuzu ödemek için bakiyeniz yeterli değil.", Color.white, player.channel.owner, player.channel.owner, EChatMode.LOCAL, default, true);
+                    return;
+                }
+
+                untPlayer.Experience -= tax;
+                screen.Land.Tax = 0;
+                screen.Land.Save();
+                ShowMenu(player, screen.Land);
+                return;
+            }
+
+            if (buttonName == "Sat" && screen.Land.Author == id.m_SteamID)
+            {
+                // TODO: SATMA FİYATLARI BELİRTİLMESİ İÇİN YER.
+                return;
+            }
+
+            if (buttonName == "Devret" && screen.Land.Author == id.m_SteamID)
+            {
+                // TODO: Birisine evi devretmesi için kullanılacak yer.
+                return;
+            }
         }
 
         public static void ShowMenu(Player player, Land land)
         {
-            SetModal(player, true);
             CSteamID id = player.channel.owner.playerID.steamID;
+
+            var screen = Screens.FirstOrDefault(s => s.Id == id);
+            if (screen == null)
+            {
+                screen = new Screen()
+                {
+                    Id = id,
+                    Land = land,
+                    Page = 1
+                };
+                Screens.Add(screen);
+            }
+            SetModal(player, true);
             short key = 454;
             EffectManager.sendUIEffect(Main.Instance.Configuration.Instance.MainEffect, key, id, true, Main.Instance.Configuration.Instance.Name);
 
@@ -51,15 +119,27 @@ namespace AdvancedHouseSystem.Managers
 
             if (land.Author == id.m_SteamID)
             {
-                // TODO: Eğer evin sahibiyse ev sahibi özellikleri.
+                EffectManager.sendUIEffectVisibility(key, id, true, "Owner", true);
+                EffectManager.sendUIEffectVisibility(key, id, true, "Adam_Çıkar", true);
+                EffectManager.sendUIEffectVisibility(key, id, true, "Adam_Ekle", true);
+                EffectManager.sendUIEffectVisibility(key, id, true, "Adam_Sıfırla", true);
+            }
+            var members = GetPageToMembers(land.Members, screen.Page, 5);
+            for (int i = 0; i < members.Count; i++)
+            {
+                var member = members[i];
+                EffectManager.sendUIEffectText(key, id, true, $"Item_{i}_T", member.Name);
+                EffectManager.sendUIEffectVisibility(key, id, true, $"Item_{i}", true);
             }
         }
 
         public static void CloseMenu(Player player)
         {
             SetModal(player, false);
-
-            // TODO: Menü listeden kaldırılacak. UI kapatılacak.
+            CSteamID id = player.channel.owner.playerID.steamID;
+            Screens.RemoveAll(s => s.Id == id);
+            
+            EffectManager.askEffectClearByID(Main.Instance.Configuration.Instance.MainEffect, id);
         }
 
         // helal lan
@@ -68,6 +148,8 @@ namespace AdvancedHouseSystem.Managers
             player.setPluginWidgetFlag(EPluginWidgetFlags.Modal, activity);
         }
 
+        public static List<Member> GetPageToMembers(List<Member> list, int page, int count) =>
+            list.Skip(page * count - count).Take(page * count).ToList();
         public static string Humanize(uint number)
         {
             string[] suffix = { "f", "a", "p", "n", "μ", "m", string.Empty, "k", "M", "G", "T", "P", "E" };
@@ -93,7 +175,7 @@ namespace AdvancedHouseSystem.Managers
     public class Screen
     {
         public CSteamID Id;
-        public Land land;
-        public int page;
+        public Land Land;
+        public int Page;
     }
 }
