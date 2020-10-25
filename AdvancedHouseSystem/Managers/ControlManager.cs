@@ -255,8 +255,11 @@ namespace AdvancedHouseSystem.Managers
             EffectManager.sendUIEffectText(key, id, true, "Count_Group_Text", $"{Provider.clients.Where(client => land.Members.Any(member => member.Id == client.player.channel.owner.playerID.steamID.m_SteamID)).Count()}/{land.Members.Count}");
             EffectManager.sendUIEffectText(key, id, true, "Tax_Text", $"<color=green>$</color>{land.Tax}");
             EffectManager.sendUIEffectText(key, id, true, "Tax_Text_0", $"<color=green>$</color>{land.UpTax}<COLOR=red>/dakika</color>");
+            if (land.Author == id.m_SteamID && land.Sale)
+            {
 
-            if (land.Author == id.m_SteamID)
+            }
+            else if (land.Author == id.m_SteamID)
             {
                 EffectManager.sendUIEffectVisibility(key, id, true, "Owner", true);
                 EffectManager.sendUIEffectVisibility(key, id, true, "ADH2_Player_Remove", true);
